@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="2397de81-ae65-434a-8295-7524e9d72506" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output/final_graph.pdf" afterPath="$PROJECT_DIR$/output/final_graph.pdf" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/output/initial_graph.pdf" afterPath="$PROJECT_DIR$/output/initial_graph.pdf" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -431,7 +429,14 @@
       <option name="project" value="LOCAL" />
       <updated>1491373574720</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Add complete tour">
+      <created>1491373589833</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1491373589833</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="ToolWindowManager">
