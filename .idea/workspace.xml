@@ -424,7 +424,14 @@
       <option name="project" value="LOCAL" />
       <updated>1491373552112</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Add complete tour">
+      <created>1491373574720</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1491373574720</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="ToolWindowManager">
@@ -460,7 +467,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Solved complete tour B&amp;B" />
     <MESSAGE value="Edit testcase 4" />
-    <option name="LAST_COMMIT_MESSAGE" value="Edit testcase 4" />
+    <MESSAGE value="Add complete tour" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add complete tour" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
