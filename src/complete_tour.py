@@ -12,93 +12,96 @@ def to_int(x):
     else:
         return int(x)
 
-# Print matrix for debugging
-# def print_matrix(matrix):
-#     for i in range(len(matrix)):
-#         for j in range(len(matrix[i])):
-#             print '%3s' % matrix[i][j],
-#         print
+# Lower bound
+def lower_bound(matrix):
+    table_two_minimum = []
+    sum = 0
+    for row in matrix:
+        m1, m2 = float('inf'), float('inf')
+        for x in row:
+            if x <= m1:
+                m1, m2 = x, m1
+            elif x < m2:
+                m2 = x
+        sum+=m1+m2
+        table_two_minimum.append([m1,m2])
+    return sum, table_two_minimum
 
-
-# Update matrix from f to t
+# Calculate cost
 def cost(node, matrix):
-    size = len(matrix)
-    sum=0
-    if len(node) == 1:
-        for i in range(size):
-            m1, m2 = float('inf'), float('inf')
-            for j in range(size):
-                if matrix[i][j] <= m1:
-                    m1, m2 = matrix[i][j], m1
-                elif matrix[i][j] < m2:
-                    m2 = matrix[i][j]
-            sum += m1 + m2
-        return float(sum)/2
-    else :
-        for i in range(size):
-            m1, m2 = float('inf'), float('inf')
-            if i in node[:-1]:
-                m1 = matrix[i][node[node.index(i)+1]]
-                curr_j = node[node.index(i)+1]
-                for j in range(size):
-                    if j==curr_j: continue
-                    if m2 > matrix[i][j]:
-                        m2 = matrix[i][j]
-            else:
-                for j in range(size):
-                    if matrix[i][j] <= m1:
-                        m1, m2 = matrix[i][j], m1
-                    elif matrix[i][j] < m2:
-                        m2 = matrix[i][j]
-            sum+=m1+m2
-        return float(sum)/2
+    sum = 0
+    remain = list(set(range(len(matrix)))-set(node))
+    for i in range(1,len(node)-1):
+        sum+=matrix[node[i]][node[i+1]]+matrix[node[i]][node[i-1]]
+    if not node[0]==node[-1]:
+        sum+=matrix[node[0]][node[1]]+matrix[node[-1]][node[-2]]
+        m1=0
+        m2=0
+        if remain :
+            m1 = float('inf')
+            m2 = float('inf')
+            for i in remain:
+                if matrix[node[0]][i]<m1:
+                    m1 = matrix[node[0]][i]
+                if matrix[node[-1]][i]<m2:
+                    m2 = matrix[node[-1]][i]
+        sum+=m1+m2
 
+    if sum == 0: # if still in first node
+        remain+=[node[0]]
+    for i in remain:
+        m1, m2 = float('inf'), float('inf')
+        for j in range(len(matrix)):
+            if matrix[i][j] <= m1:
+                m1, m2 = matrix[i][j], m1
+            elif matrix[i][j] < m2:
+                m2 = matrix[i][j]
+        sum+=m1+m2
 
-# Return list of unvisited node
+    return float(sum)/2
+
 def node_child(node_state,matrix):
-    l = []
-    size = len(matrix)
-    for i in range(size):
-        if i in node_state: continue
-        l += [i]
-    return l
+    return list(set(range(len(matrix)))-set(node_state))
 
 
 # Solve TSP recursively
 def solve(q,matrix,state_num):
-    cur_state = q.get()
-    curr_cost = cur_state[0]
-    node_state = cur_state[1]
-    node_target = node_child(node_state,matrix)
-    if len(node_target) == 0:
-        if node_state[-1]==node_state[0]:
-            prev_state = []
-            i = 0
-            while(not q.empty()):
-                temp = q.get()
-                if temp[0]<=curr_cost:
-                    prev_state += [temp]
-                    i+=1
-            for elem in prev_state:
-                q.put(elem)
-            if not q.empty():
-                return solve(q,matrix,state_num)
-            else:
-                node_state = [elem + 1 for elem in node_state]
-                return curr_cost, node_state, state_num
-        else:
-            node_next = node_state + [node_state[0]]
-            cost_next = cost(node_next,matrix)
-            q.put((cost_next, node_next))
-            return solve(q,matrix,state_num)
-    else:
-        state_num+=len(node_target)
-        print [elem + 1 for elem in node_target]
+    cost_res = 0
+    node_state_res = []
+    B = float('inf')
+    while(not q.empty()):
+        cur_state = q.get()
+        curr_cost = cur_state[0]
+        node_state = cur_state[1]
+        node_target = node_child(node_state,matrix)
+
+        if not node_target:
+            if not node_state[0]==node_state[-1]:
+                node_next = node_state + [node_state[0]]
+                cost_next = curr_cost+matrix[node_state[-1]][node_state[0]]
+                q.put((cost_next,node_next))
+            else :
+                if curr_cost<B :
+                    node_state_res = node_state
+                    cost_res = curr_cost
+                B = curr_cost
+                store = []
+                while not q.empty():
+                    temp = q.get()
+                    if abs(temp[0] - B)<=0.1:
+                        store.append(temp)
+                for elem in store:
+                    q.put(elem)
+
+        state_num += len(node_target)
         for i in node_target:
             node_next = node_state + [i]
             cost_next = cost(node_next,matrix)
-            q.put((cost_next, node_next))
-        return solve(q,matrix,state_num)
+            if cost_next<=B:
+                q.put((cost_next, node_next))
+
+    node_state_res = [elem + 1 for elem in node_state_res]
+    return cost_res, node_state_res, state_num
 
 
 # Read user input
@@ -119,9 +122,9 @@ node_init -= 1
 
 # Add reducing state to priority queue
 q = Q.PriorityQueue()
-c0 = cost([node_init],matrix)
+low_bound = cost([node_init],matrix)
 state_num = 1
-q.put((c0, [node_init]))
+q.put((low_bound, [node_init]))
 
 # Solve TSP :)
 result = solve(q,matrix,state_num)
