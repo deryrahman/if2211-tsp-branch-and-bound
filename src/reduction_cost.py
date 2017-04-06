@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import Queue as Q
 import math
+
+import time
+
 from graph import *
 from copy import deepcopy
 
@@ -104,7 +107,7 @@ matrix = [item.split() for item in matrix.split('\n')[:-1]]
 matrix = [[to_int(column) for column in row] for row in matrix]
 
 # create initial graph
-create_digraph(matrix)
+create_graph(matrix,[],True)
 matrix_final = deepcopy(matrix)
 
 # Node 1..N is 0..N-1
@@ -116,9 +119,14 @@ c0 = reducing(matrix)
 state_num = 1
 q.put((c0, [node_init], matrix))
 
+start_time = time.time()
 # Solve TSP :)
 result = solve(q,state_num)
-print result
+print("Total bobot tereduksi : %.2f" % result[0])
+print "Jalur yang ditempuh : ",
+print result[1]
+print("Simpul yang dibangkitkan : %d" % result[2])
+print("Waktu yang diperlukan : %.6s detik" % (time.time() - start_time))
 
-# create graph after TXP algorithm
-create_digraph(matrix_final,result[1])
+# create graph after TSP algorithm
+create_graph(matrix_final,result[1],True)

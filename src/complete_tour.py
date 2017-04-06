@@ -1,6 +1,9 @@
 #!/usr/bin/env python
 import Queue as Q
 import math
+
+import time
+
 from graph import *
 from copy import deepcopy
 
@@ -64,7 +67,7 @@ def node_child(node_state,matrix):
     return list(set(range(len(matrix)))-set(node_state))
 
 
-# Solve TSP recursively
+# Solve TSP using priority queue
 def solve(q,matrix,state_num):
     cost_res = 0
     node_state_res = []
@@ -126,9 +129,14 @@ low_bound = cost([node_init],matrix)
 state_num = 1
 q.put((low_bound, [node_init]))
 
+start_time = time.time()
 # Solve TSP :)
 result = solve(q,matrix,state_num)
-print result
+print("Bobot tur lengkap : %.2f" % result[0])
+print "Jalur yang ditempuh : ",
+print result[1]
+print("Simpul yang dibangkitkan : %d" % result[2])
+print("Waktu yang diperlukan : %.6s detik" % (time.time() - start_time))
 
 # create graph after TSP algorithm
 create_graph(matrix_final,result[1])
